@@ -7,23 +7,35 @@ import { BiImplementationService } from '../../services/bi-implementation.servic
   styleUrls: ['./bi.component.scss'],
 })
 export class BiComponent {
-  public screenHeight!: number;
+  reportsInformation: any[] = [];
+  paramId: any = null;
   constructor(
     private biImplementationSE: BiImplementationService,
     private activatedRoute: ActivatedRoute
   ) {}
 
   async ngOnInit() {
-    this.getIdByRoutee();
+    this.paramId = this.activatedRoute.snapshot.paramMap.get('id');
+
+    this.getBiReportsWithCredentials();
+    this.getBiReportWithCredentialsById();
   }
 
-  getIdByRoutee() {
-    console.log(this.activatedRoute.snapshot.paramMap.get('id'));
-    this.screenHeight = window.screen.height;
+  getBiReportWithCredentialsById() {
+    if (!this.paramId) return;
+    this.biImplementationSE
+      .getBiReportWithCredentialsById(this.paramId)
+      .subscribe((resp) => {
+        const { token, report } = resp;
+        this.biImplementationSE.renderReport(token, report);
+      });
+  }
+
+  getBiReportsWithCredentials() {
+    if (this.paramId) return;
     this.biImplementationSE.getBiReportsWithCredentials().subscribe((resp) => {
-      // console.log(resp);
-      const { embed_token, reportsInformation } = resp;
-      this.biImplementationSE.renderReport(embed_token, reportsInformation[0]);
+      const { reportsInformation } = resp;
+      this.reportsInformation = reportsInformation;
     });
   }
 }

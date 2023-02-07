@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { BiModule } from './pages/bi/bi.module';
-
 const routes: Routes = [
+  {
+    path: 'bi',
+    loadChildren: () => import('./pages/bi/bi.module').then((m) => m.BiModule),
+  },
   {
     path: 'bi/:id',
     loadChildren: () => import('./pages/bi/bi.module').then((m) => m.BiModule),
   },
-  // { path: '**', pathMatch: 'full', redirectTo: 'bi' },
+  { path: '**', pathMatch: 'full', redirectTo: 'bi' },
 ];
 
 @NgModule({

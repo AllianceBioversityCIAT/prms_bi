@@ -14,6 +14,12 @@ export class BiImplementationService {
     return this.http.get<any>(`${this.apiBaseUrl}/bi-reports`);
   }
 
+  getBiReportWithCredentialsById(reportId: string) {
+    return this.http.get<any>(
+      `${this.apiBaseUrl}/bi-reports/report/${reportId}`
+    );
+  }
+
   renderReport(accessToken: any, infoReport: any) {
     // Embed URL
     // console.log(infoReport);

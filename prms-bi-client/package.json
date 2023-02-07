@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "ups3": "ng build && cd .. && start ups3.bat"
   },
   "private": true,
   "dependencies": {
