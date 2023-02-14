@@ -79,9 +79,10 @@ export class BiImplementationService {
           })[0];
 
           const visuals = await page.getVisuals();
-          let visual = visuals.filter((visual: any) => {
-            return visual.name === '19eaa2a666788114ee07';
-          })[0];
+
+          let visual = visuals.find(
+            (vv: any) => vv.title.search('export_data_table') >= 0
+          );
 
           const result = await visual.exportData(
             pbi.models.ExportDataType.Summarized
@@ -96,27 +97,6 @@ export class BiImplementationService {
   }
 
   dataToObject(data: any) {
-    // console.log(data);
-    let list: any[] = [];
-    let header = data.split('\r\n')[0].split(',');
-    // console.log(header);
-
-    let allRows = data.split('\r\n').map((dataItem: any) => {
-      let dataEx: any = {};
-
-      let dataSplited = dataItem.replace(
-        /(,)(?=(?:[^"]|"[^"]*")*$)/g,
-        '|coma|'
-      );
-      dataSplited = dataSplited.split('|coma|');
-      console.log(dataSplited);
-      header.map((head: any, index: any) => {
-        dataEx[' ' + head] = dataSplited[index];
-      });
-      list.push(dataEx);
-    });
-
-    console.log(list);
-    this.exportTablesSE.exportExcel(list, 'Results detail');
+    this.exportTablesSE.saveAsExcelFile(data, 'file');
   }
 }

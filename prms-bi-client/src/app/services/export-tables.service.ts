@@ -22,11 +22,10 @@ export class ExportTablesService {
       this.saveAsExcelFile(excelBuffer, fileName);
     });
   }
-  private saveAsExcelFile(buffer: any, fileName: string): void {
-    let EXCEL_TYPE =
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    let EXCEL_EXTENSION = '.xlsx';
-    const data: Blob = new Blob([buffer], {
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    let EXCEL_TYPE = 'text/csv;charset=UTF-8';
+    let EXCEL_EXTENSION = '.csv';
+    const data: Blob = new Blob(['\ufeff' + buffer], {
       type: EXCEL_TYPE,
     });
     FileSaver.saveAs(
@@ -34,4 +33,27 @@ export class ExportTablesService {
       fileName + '_' + new Date().getTime() + EXCEL_EXTENSION
     );
   }
+  // saveCsv(data: any) {
+  //   const BOM = '\uFEFF';
+
+  //   // var blob = new Blob([data], { type: 'text/plain;charset=UTF-8-BOM' });
+  //   // FileSaver.saveAs(blob, 'yourcsv.csv');
+  //   const blob = new Blob([BOM + data], { type: 'text/csv;charset=UTF-8' });
+
+  //   // Creating an object for downloading url
+  //   const url = window.URL.createObjectURL(blob);
+
+  //   // Creating an anchor(a) tag of HTML
+  //   const a = document.createElement('a');
+
+  //   // Passing the blob downloading url
+  //   a.setAttribute('href', url);
+
+  //   // Setting the anchor tag attribute for downloading
+  //   // and passing the download file name
+  //   a.setAttribute('download', 'download.csv');
+
+  //   // Performing a download with click
+  //   a.click();
+  // }
 }
