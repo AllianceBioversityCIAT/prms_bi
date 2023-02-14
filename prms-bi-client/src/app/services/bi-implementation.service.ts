@@ -53,8 +53,8 @@ export class BiImplementationService {
     report.on('loaded', () => {
       console.log('Loaded');
     });
-    report.on('error', () => {
-      console.log('ERROR WEY');
+    report.on('error', (err) => {
+      console.log(err);
     });
     this.exportButton(report);
   }
@@ -69,34 +69,55 @@ export class BiImplementationService {
     // report.on will add an event listener.
 
     report.on('bookmarkApplied', async (event: any) => {
-      if (event.detail.bookmarkName == 'Bookmarkc25052bc6f133cc544c3') {
-        console.log('Exporting data...\n');
-
-        try {
-          const pages = await report.getPages();
-          let page = pages.filter((page: any) => {
-            return page.isActive;
-          })[0];
-
-          const visuals = await page.getVisuals();
-
-          let visual = visuals.find(
-            (vv: any) => vv.title.search('export_data_table') >= 0
-          );
-
-          const result = await visual.exportData(
-            pbi.models.ExportDataType.Summarized
-          );
-
-          this.dataToObject(result.data);
-        } catch (errors) {
-          console.log(errors);
-        }
-      }
+      this.detectButtonAndTable(
+        event,
+        report,
+        'Bookmarkc25052bc6f133cc544c3',
+        'export_data_table'
+      );
+      this.detectButtonAndTable(
+        event,
+        report,
+        'Bookmark5a3a4ad20979a9aa36ba',
+        'export_data_table'
+      );
     });
   }
 
+  async detectButtonAndTable(
+    event: any,
+    report: any,
+    bookmarkName: any,
+    title: any
+  ) {
+    console.log(event.detail.bookmarkName);
+    if (event.detail.bookmarkName == bookmarkName) {
+      console.log('Exporting data...\n');
+
+      try {
+        const pages = await report.getPages();
+        let page = pages.filter((page: any) => {
+          return page.isActive;
+        })[0];
+
+        const visuals = await page.getVisuals();
+
+        let visual = visuals.find((vv: any) => vv.title.search(title) >= 0);
+        console.log(visual);
+
+        const result = await visual.exportData(
+          pbi.models.ExportDataType.Summarized
+        );
+
+        this.dataToObject(result.data);
+      } catch (errors) {
+        console.log(errors);
+      }
+    }
+  }
+
   dataToObject(data: any) {
+    console.log(data);
     this.exportTablesSE.saveAsExcelFile(data, 'file');
   }
 }
