@@ -24,7 +24,7 @@ export class BiImplementationService {
     );
   }
 
-  renderReport(accessToken: any, infoReport: any) {
+  renderReport(accessToken: any, infoReport: any, filtervalue: string) {
     // Embed URL
     // console.log(infoReport);
     let embedUrl = infoReport.embed_url;
@@ -48,15 +48,43 @@ export class BiImplementationService {
       pbi.factories.wpmpFactory,
       pbi.factories.routerFactory
     );
-    let report = powerbi.embed(embedContainer, config);
+    let report: any = powerbi.embed(embedContainer, config);
     report.off('loaded');
     report.on('loaded', () => {
       console.log('Loaded');
+      report.getFilters().then((filters: any) => {
+        console.log(filters[0]);
+        // filters[0].values = ['INIT-01'];
+        this.changeFilter(report, filtervalue);
+      });
     });
-    report.on('error', (err) => {
+    report.on('error', (err: any) => {
       console.log(err);
     });
     this.exportButton(report);
+  }
+
+  async changeFilter(report: any, filtervalue: string) {
+    if (!filtervalue) return;
+    const filter = {
+      $schema: 'http://powerbi.com/product/schema#basic',
+      target: {
+        table: 'result_initiatives',
+        column: 'official_code',
+      },
+      operator: 'In',
+      values: [filtervalue],
+    };
+
+    // Replace report's filters with the same target data field.
+    try {
+      await report.updateFilters(pbi.models.FiltersOperations.Replace, [
+        filter,
+      ]);
+      console.log('Report filters were replaced.');
+    } catch (errors) {
+      console.log(errors);
+    }
   }
 
   exportButton(report: any) {

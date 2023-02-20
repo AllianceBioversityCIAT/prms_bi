@@ -27,7 +27,9 @@ export class BiComponent {
       .getBiReportWithCredentialsById(this.paramId)
       .subscribe((resp) => {
         const { token, report } = resp;
-        this.biImplementationSE.renderReport(token, report);
+        const filtervalue: any =
+          this.activatedRoute.snapshot.paramMap.get('filtervalue');
+        this.biImplementationSE.renderReport(token, report, filtervalue);
       });
   }
 
