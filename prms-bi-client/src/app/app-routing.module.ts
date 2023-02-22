@@ -6,12 +6,9 @@ const routes: Routes = [
     loadChildren: () => import('./pages/bi/bi.module').then((m) => m.BiModule),
   },
   {
-    path: 'bi/:id',
-    loadChildren: () => import('./pages/bi/bi.module').then((m) => m.BiModule),
-  },
-  {
-    path: 'bi/:id/:filtervalue',
-    loadChildren: () => import('./pages/bi/bi.module').then((m) => m.BiModule),
+    path: 'bi-list',
+    loadChildren: () =>
+      import('./pages/bi-list/bi-list.module').then((m) => m.BiListModule),
   },
   { path: '**', pathMatch: 'full', redirectTo: 'bi' },
 ];

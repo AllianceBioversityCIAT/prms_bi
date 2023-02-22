@@ -1,6 +1,4 @@
-<div #reportContainer id="reportContainer" *ngIf="this.paramId">
+<div #reportContainer id="reportContainer" *ngIf="this.reportId">
 </div>
 
-<div class="reports">
-    <a [routerLink]="'/bi/'+report?.id" *ngFor="let report of this.reportsInformation">{{report.description}}</a>
-</div>
+<h1 *ngIf="!this.reportName">No reportName</h1>

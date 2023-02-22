@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import * as pbi from 'powerbi-client';
 import { ExportTablesService } from './export-tables.service';
+import { FiltersByDashboardService } from './filters-by-dashboard.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,11 +11,13 @@ import { ExportTablesService } from './export-tables.service';
 export class BiImplementationService {
   constructor(
     public http: HttpClient,
-    private exportTablesSE: ExportTablesService
+    private exportTablesSE: ExportTablesService,
+    private filtersByDashboardSE: FiltersByDashboardService
   ) {}
 
   apiBaseUrl = environment.apiBaseUrl + 'result-dashboard-bi';
   getBiReportsWithCredentials() {
+    console.log(`${this.apiBaseUrl}/bi-reports`);
     return this.http.get<any>(`${this.apiBaseUrl}/bi-reports`);
   }
 
@@ -24,7 +27,7 @@ export class BiImplementationService {
     );
   }
 
-  renderReport(accessToken: any, infoReport: any, filtervalue: string) {
+  renderReport(accessToken: any, infoReport: any, reportName: string) {
     // Embed URL
     // console.log(infoReport);
     let embedUrl = infoReport.embed_url;
@@ -51,40 +54,16 @@ export class BiImplementationService {
     let report: any = powerbi.embed(embedContainer, config);
     report.off('loaded');
     report.on('loaded', () => {
-      console.log('Loaded');
+      // console.log('Loaded');
       report.getFilters().then((filters: any) => {
-        console.log(filters[0]);
-        // filters[0].values = ['INIT-01'];
-        this.changeFilter(report, filtervalue);
+        console.log(filters);
+        this.filtersByDashboardSE.applyFilters(report, reportName);
       });
     });
     report.on('error', (err: any) => {
       console.log(err);
     });
     this.exportButton(report);
-  }
-
-  async changeFilter(report: any, filtervalue: string) {
-    if (!filtervalue) return;
-    const filter = {
-      $schema: 'http://powerbi.com/product/schema#basic',
-      target: {
-        table: 'result_initiatives',
-        column: 'official_code',
-      },
-      operator: 'In',
-      values: [filtervalue],
-    };
-
-    // Replace report's filters with the same target data field.
-    try {
-      await report.updateFilters(pbi.models.FiltersOperations.Replace, [
-        filter,
-      ]);
-      console.log('Report filters were replaced.');
-    } catch (errors) {
-      console.log(errors);
-    }
   }
 
   exportButton(report: any) {
