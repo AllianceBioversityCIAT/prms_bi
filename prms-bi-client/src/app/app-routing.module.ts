@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
-    path: 'bi',
+    path: 'bi/:reportName',
     loadChildren: () => import('./pages/bi/bi.module').then((m) => m.BiModule),
   },
   {
@@ -10,7 +10,14 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/bi-list/bi-list.module').then((m) => m.BiListModule),
   },
-  { path: '**', pathMatch: 'full', redirectTo: 'bi' },
+  {
+    path: 'playground',
+    loadChildren: () =>
+      import('./pages/playground/playground.module').then(
+        (m) => m.PlaygroundModule
+      ),
+  },
+  { path: '**', pathMatch: 'full', redirectTo: 'bi-list' },
 ];
 
 @NgModule({

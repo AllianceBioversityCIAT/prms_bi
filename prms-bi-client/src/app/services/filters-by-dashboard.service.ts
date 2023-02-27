@@ -28,6 +28,16 @@ export class FiltersByDashboardService {
       },
     },
     {
+      reportName: 'result-dashboard_test',
+      filterData: {
+        target: {
+          table: 'fact_results',
+          column: 'Type',
+        },
+        valueAttr: 'resultType',
+      },
+    },
+    {
       reportName: 'type-1-report-dashboard',
       filterData: {
         target: {
@@ -61,11 +71,11 @@ export class FiltersByDashboardService {
       ],
     };
 
+    console.log(filter);
+
     // Replace report's filters with the same target data field.
     try {
-      await report.updateFilters(pbi.models.FiltersOperations.Replace, [
-        filter,
-      ]);
+      await report.setFilters([filter]);
       console.log('Report filters were replaced.');
     } catch (errors) {
       console.log(errors);

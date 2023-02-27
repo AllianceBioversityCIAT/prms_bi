@@ -27,7 +27,8 @@ export class BiComponent {
   }
 
   getQueryParams() {
-    this.reportName = this.activatedRoute.snapshot.queryParams['reportName'];
+    this.reportName =
+      this.activatedRoute.snapshot.paramMap.get('reportName') || '';
     // if (!this.reportName) this.router.navigate(['/bi-list']);
     this.reportId = this.getReportId(this.reportName);
   }

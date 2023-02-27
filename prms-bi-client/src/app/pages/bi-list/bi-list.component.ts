@@ -13,7 +13,6 @@ export class BiListComponent {
       reportName: 'results-dashboard',
       id: 3,
       queryParams: {
-        reportName: 'results-dashboard',
         year: '2022',
       },
     },
@@ -22,14 +21,12 @@ export class BiListComponent {
       id: 4,
       queryParams: {
         official_code: 'INIT-03',
-        reportName: 'type-1-report-dashboard',
       },
     },
     {
       reportName: 'result-dashboard_test',
       id: 5,
       queryParams: {
-        reportName: 'result-dashboard_test',
         year: '2022',
       },
     },
