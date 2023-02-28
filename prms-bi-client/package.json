@@ -7,7 +7,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "ups3": "ng build && cd .. && start ups3.bat"
+    "deploy-test": "ng build && cd ../scripts && start ups3-test.bat",
+    "deploy-prod": "ng build && cd ../scripts && start ups3-prod.bat",
+    "deploy-all-envs": "ng build && cd ../scripts && start ups3-test.bat && start ups3-prod.bat"
   },
   "private": true,
   "dependencies": {
@@ -19,6 +21,7 @@
     "@angular/platform-browser": "^15.1.0",
     "@angular/platform-browser-dynamic": "^15.1.0",
     "@angular/router": "^15.1.0",
+    "csvtojson": "^2.0.10",
     "file-saver": "^2.0.5",
     "powerbi-client": "^2.22.2",
     "rxjs": "~7.8.0",
