@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as FileSaver from 'file-saver';
+import * as csv from 'csvtojson';
+// declare var csv: any;
 interface Wscols {
   wpx: number;
 }
@@ -8,24 +10,73 @@ interface Wscols {
 })
 export class ExportTablesService {
   constructor() {}
-  exportExcel(list: any, fileName: string, wscols?: Wscols[]) {
-    import('xlsx').then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(list, {
-        skipHeader: true,
-      });
-      if (wscols) worksheet['!cols'] = wscols as any;
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-      const excelBuffer: any = xlsx.write(workbook, {
-        bookType: 'xlsx',
-        type: 'array',
-      });
-      this.saveAsExcelFile(excelBuffer, fileName);
+
+  async localCsvToJson(csvText: string) {
+    return new Promise((resolve, reject) => {
+      console.clear();
+      let list: any[] = [];
+      let array: any;
+      csv({
+        noheader: true,
+        output: 'csv',
+      })
+        .fromString(csvText)
+        .then((data: any) => {
+          console.log(data);
+          console.log(data?.length);
+          array = data;
+
+          console.log('end');
+
+          array.forEach((row: any, i: any) => {
+            // console.log('- -- - - - row - - - - -');
+            // console.log(row);
+            if (i == 0) return;
+            let obj: any = {};
+            row.forEach((col: any, j: any) => {
+              // console.log('- -- - - - col - - - - -');
+              obj[array[0][j]] = array[i][j];
+              // for (const key in list) {
+              // }
+            });
+            list.push(obj);
+          });
+
+          resolve(list);
+        });
     });
   }
-  saveAsExcelFile(buffer: any, fileName: string): void {
-    let EXCEL_TYPE = 'text/csv;charset=UTF-8';
-    let EXCEL_EXTENSION = '.csv';
-    const data: Blob = new Blob(['\ufeff' + buffer], {
+
+  async exportExcel(csvText: any, fileName: string, wscols?: Wscols[]) {
+    this.localCsvToJson(csvText).then((list: any) => {
+      try {
+        import('xlsx').then((xlsx) => {
+          const worksheet = xlsx.utils.json_to_sheet(list, {
+            skipHeader: Boolean(wscols?.length),
+          });
+          if (wscols) worksheet['!cols'] = wscols as any;
+          const workbook = {
+            Sheets: { data: worksheet },
+            SheetNames: ['data'],
+          };
+          const excelBuffer: any = xlsx.write(workbook, {
+            bookType: 'xlsx',
+            type: 'array',
+          });
+          this.saveAsExcelFile(excelBuffer, fileName);
+        });
+      } catch (error) {
+        console.log(error);
+        // this.customAlertService.show({ id: 'loginAlert', title: 'Oops!', description: 'Erorr generating file', status: 'error' });
+      }
+    });
+  }
+
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    let EXCEL_TYPE =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
       type: EXCEL_TYPE,
     });
     FileSaver.saveAs(
