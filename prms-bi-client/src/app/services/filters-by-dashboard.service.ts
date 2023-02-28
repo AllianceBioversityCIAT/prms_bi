@@ -52,13 +52,13 @@ export class FiltersByDashboardService {
   constructor(private activatedRoute: ActivatedRoute) {}
 
   async changeFilter(report: any, filterParams: any) {
-    console.log('Filter');
-    console.log(filterParams?.filterData?.target);
-    console.log(
-      this.activatedRoute.snapshot.queryParams[
-        filterParams?.filterData?.valueAttr
-      ]
-    );
+    // console.log('Filter');
+    // console.log(filterParams?.filterData?.target);
+    // console.log(
+    //   this.activatedRoute.snapshot.queryParams[
+    //     filterParams?.filterData?.valueAttr
+    //   ]
+    // );
     // if (!filterParams?.values?.length) return;
     const filter = {
       $schema: 'http://powerbi.com/product/schema#basic',
@@ -71,14 +71,14 @@ export class FiltersByDashboardService {
       ],
     };
 
-    console.log(filter);
+    // console.log(filter);
 
     // Replace report's filters with the same target data field.
     try {
       await report.setFilters([filter]);
-      console.log('Report filters were replaced.');
+      // console.log('Report filters were replaced.');
     } catch (errors) {
-      console.log(errors);
+      // console.log(errors);
     }
   }
 

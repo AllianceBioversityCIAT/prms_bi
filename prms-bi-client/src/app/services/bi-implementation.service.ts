@@ -27,6 +27,12 @@ export class BiImplementationService {
     );
   }
 
+  getBiReportWithCredentialsByreportName(report_name: string) {
+    return this.http.get<any>(
+      `${this.apiBaseUrl}/bi-reports/reportName/${report_name}`
+    );
+  }
+
   renderReport(accessToken: any, infoReport: any, reportName: string) {
     // Embed URL
     // console.log(infoReport);
@@ -125,6 +131,6 @@ export class BiImplementationService {
 
   dataToObject(data: any) {
     console.log(data);
-    this.exportTablesSE.saveAsExcelFile(data, 'file');
+    this.exportTablesSE.exportExcel(data, 'file');
   }
 }

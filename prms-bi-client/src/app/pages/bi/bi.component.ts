@@ -8,12 +8,6 @@ import { BiImplementationService } from '../../services/bi-implementation.servic
 })
 export class BiComponent {
   reportName = '';
-  reportId = null;
-  burnedReportsList: any[] = [
-    { reportName: 'results-dashboard', id: 3 },
-    { reportName: 'type-1-report-dashboard', id: 4 },
-    { reportName: 'result-dashboard_test', id: 5 },
-  ];
   constructor(
     private biImplementationSE: BiImplementationService,
     private activatedRoute: ActivatedRoute,
@@ -22,7 +16,7 @@ export class BiComponent {
 
   async ngOnInit() {
     this.getQueryParams();
-    this.getBiReportWithCredentialsById();
+    this.getBiReportWithCredentialsByreportName();
     this.example();
   }
 
@@ -30,7 +24,6 @@ export class BiComponent {
     this.reportName =
       this.activatedRoute.snapshot.paramMap.get('reportName') || '';
     // if (!this.reportName) this.router.navigate(['/bi-list']);
-    this.reportId = this.getReportId(this.reportName);
   }
 
   example() {
@@ -43,26 +36,19 @@ export class BiComponent {
         values: [],
       },
     ];
-    console.log(JSON.stringify(jsonExample));
+    // console.log(JSON.stringify(jsonExample));
   }
 
-  getReportId(reportName: string) {
-    const reportFounded = this.burnedReportsList.find(
-      (reportItem) => reportItem.reportName == reportName
-    );
-    return reportFounded?.id;
-  }
-
-  getBiReportWithCredentialsById() {
-    if (!this.reportId) return;
+  getBiReportWithCredentialsByreportName() {
+    if (!this.reportName) return;
 
     this.biImplementationSE
-      .getBiReportWithCredentialsById(this.reportId)
+      .getBiReportWithCredentialsByreportName(this.reportName)
       .subscribe((resp) => {
         const { token, report } = resp;
         const filtervalue: any =
           this.activatedRoute.snapshot.paramMap.get('filtervalue');
-        console.log(this.activatedRoute.snapshot.queryParams);
+        // console.log(this.activatedRoute.snapshot.queryParams);
 
         this.biImplementationSE.renderReport(token, report, this.reportName);
       });

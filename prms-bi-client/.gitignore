@@ -44,3 +44,5 @@ Thumbs.db
 # Custom
 /src/environments/*.ts
 package-lock.json
+
+/todo-list

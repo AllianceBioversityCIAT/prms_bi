@@ -25,7 +25,10 @@
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets", "src/widget"],
             "styles": ["src/styles.scss"],
-            "scripts": []
+            "scripts": [
+              "node_modules/powerbi-client/dist/powerbi.js",
+              "node_modules/csvtojson/V2/index.js"
+            ]
           },
           "configurations": {
             "production": {
