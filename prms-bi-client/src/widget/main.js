@@ -1,22 +1,26 @@
-function url(year, resultType) {
-    return `https://bitest.ciat.cgiar.org/bi/result-dashboard_test?year=${year}&resultType=${resultType}`
+function url(data) {
+    const yearParam = `&year=${data?.year}`;
+    const resultTypeParam = `&resultType=${data?.resultType}`;
+    const url = `https://bi.prms.cgiar.org/bi/cgiar-results-dashboard${data?.year || data?.resultType ? '?' : ''}${data?.year ? yearParam : ''}${data?.resultType ? resultTypeParam : ''}`;
+    console.log(url);
+    return url;
 }
 
 let widget = null;
 
 var pbiwidget = {
-    init: (divId, year, resultType, height = '1000px') => {
+    init: (divId, data) => {
         widget = document.getElementById(divId);
 
         let iframe = document.createElement('iframe');
         iframe.setAttribute('id', 'iframe-dashboardEmbed');
         iframe.setAttribute('scrolling', 'no');
-        iframe.setAttribute('src', url(year, resultType));
+        iframe.setAttribute('src', url(data));
         iframe.style.width = "100%";
         iframe.style.height = "100%";
         // widget.style.background = 'red'
         widget.style.width = "100%";
-        widget.style.height = height;
+        widget.style.height = data?.height || '1000px';
         widget.appendChild(iframe);
         // iframe.onload = function () {
         //     console.log("Iframe loaded");
@@ -25,9 +29,9 @@ var pbiwidget = {
 
     },
 
-    setFilters(year, resultType) {
+    setFilters(data) {
         let iframe = document.getElementById('iframe-dashboardEmbed')
-        iframe.setAttribute('src', url(year, resultType));
+        iframe.setAttribute('src', url(data));
     }
 
 }

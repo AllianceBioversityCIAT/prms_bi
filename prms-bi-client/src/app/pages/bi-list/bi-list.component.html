@@ -1,4 +1,10 @@
 <div class="reports">
     <a [routerLink]="'/bi/'+report.name" [queryParams]="report?.queryParams"
-        *ngFor="let report of this.reportsInformation">{{report.description}}</a>
+        [hidden]="!report?.description && !report?.title" *ngFor="let report of this.reportsInformation; let i=index">
+        <div class="report_title">{{report?.title}}</div>
+        <div class="report_description" [innerHTML]="report.description"></div>
+        <div class="report_description"> <strong>Name</strong> {{report.name}}</div>
+        <div class="report-filters" [innerHTML]="getFilterData(report)">
+        </div>
+    </a>
 </div>

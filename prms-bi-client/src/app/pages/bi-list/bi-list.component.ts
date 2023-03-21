@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { BiImplementationService } from '../../services/bi-implementation.service';
+import { FiltersByDashboardService } from '../../services/filters-by-dashboard.service';
 
 @Component({
   selector: 'app-bi-list',
@@ -8,30 +9,11 @@ import { BiImplementationService } from '../../services/bi-implementation.servic
 })
 export class BiListComponent {
   reportsInformation: any[] = [];
-  burnedReportsList: any[] = [
-    {
-      reportName: 'results-dashboard',
-      id: 3,
-      queryParams: {
-        year: '2022',
-      },
-    },
-    {
-      reportName: 'type-1-report-dashboard',
-      id: 4,
-      queryParams: {
-        official_code: 'INIT-03',
-      },
-    },
-    {
-      reportName: 'result-dashboard_test',
-      id: 5,
-      queryParams: {
-        year: '2022',
-      },
-    },
-  ];
-  constructor(private biImplementationSE: BiImplementationService) {}
+
+  constructor(
+    private biImplementationSE: BiImplementationService,
+    private filtersByDashboardSE: FiltersByDashboardService
+  ) {}
   ngOnInit(): void {
     this.getBiReportsWithCredentials();
   }
@@ -40,18 +22,21 @@ export class BiListComponent {
       console.log(resp);
       const { reportsInformation } = resp;
       this.reportsInformation = reportsInformation;
-      this.mapBurnedInfo();
+      console.log(reportsInformation);
     });
   }
-  mapBurnedInfo() {
-    this.reportsInformation.map((report) => {
-      let burnedReportFunded = this.burnedReportsList.find(
-        (bReport) => bReport.id == report.id
-      );
-      if (!burnedReportFunded) return;
-      report.name = burnedReportFunded?.reportName;
-      report.queryParams = burnedReportFunded?.queryParams;
+
+  getFilterData(report: any) {
+    let filtersFunded = this.filtersByDashboardSE.filters.filter(
+      (filter) => filter.reportName == report.name
+    );
+
+    let data = `<strong>Quantity of filters:</strong> ${
+      filtersFunded?.length || 0
+    }<br> <strong>filter names:</strong>`;
+    filtersFunded.forEach((filter: any) => {
+      data += `<br>${filter?.filterData?.valueAttr}`;
     });
-    console.log(this.reportsInformation);
+    return data;
   }
 }

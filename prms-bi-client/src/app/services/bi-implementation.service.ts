@@ -17,7 +17,6 @@ export class BiImplementationService {
 
   apiBaseUrl = environment.apiBaseUrl + 'result-dashboard-bi';
   getBiReportsWithCredentials() {
-    console.log(`${this.apiBaseUrl}/bi-reports`);
     return this.http.get<any>(`${this.apiBaseUrl}/bi-reports`);
   }
 
@@ -62,7 +61,7 @@ export class BiImplementationService {
     report.on('loaded', () => {
       // console.log('Loaded');
       report.getFilters().then((filters: any) => {
-        console.log(filters);
+        // console.log(filters);
         this.filtersByDashboardSE.applyFilters(report, reportName);
       });
     });
@@ -82,50 +81,49 @@ export class BiImplementationService {
     // report.on will add an event listener.
 
     report.on('bookmarkApplied', async (event: any) => {
-      this.detectButtonAndTable(
-        event,
+      const bookmarkNameFound = await this.getBookmarkName(
         report,
-        'Bookmarkc25052bc6f133cc544c3',
-        'export_data_table'
+        event.detail.bookmarkName
       );
-      this.detectButtonAndTable(
-        event,
-        report,
-        'Bookmark5a3a4ad20979a9aa36ba',
-        'export_data_table'
-      );
+      console.log(bookmarkNameFound);
+
+      this.detectButtonAndTable(report, bookmarkNameFound);
     });
   }
 
-  async detectButtonAndTable(
-    event: any,
-    report: any,
-    bookmarkName: any,
-    title: any
-  ) {
-    console.log(event.detail.bookmarkName);
-    if (event.detail.bookmarkName == bookmarkName) {
-      console.log('Exporting data...\n');
+  async getBookmarkName(report: any, bookmarkId: any) {
+    const bookmarks = await report.bookmarksManager.getBookmarks();
 
-      try {
-        const pages = await report.getPages();
-        let page = pages.filter((page: any) => {
-          return page.isActive;
-        })[0];
+    const bookmarkFound = bookmarks.find((bm: any) => bm.name == bookmarkId);
 
-        const visuals = await page.getVisuals();
+    console.log(bookmarkFound?.displayName);
+    return bookmarkFound?.displayName;
+  }
 
-        let visual = visuals.find((vv: any) => vv.title.search(title) >= 0);
-        console.log(visual);
+  async detectButtonAndTable(report: any, bookmarkName: any) {
+    if (bookmarkName.search('export_data') < 0) return;
+    console.log('Exporting data...\n');
 
-        const result = await visual.exportData(
-          pbi.models.ExportDataType.Summarized
-        );
+    try {
+      const pages = await report.getPages();
+      let page = pages.filter((page: any) => {
+        return page.isActive;
+      })[0];
 
-        this.dataToObject(result.data);
-      } catch (errors) {
-        console.log(errors);
-      }
+      const visuals = await page.getVisuals();
+
+      let visual = visuals.find(
+        (vv: any) => vv.title.search('export_data_table') >= 0
+      );
+      console.log(visual);
+
+      const result = await visual.exportData(
+        pbi.models.ExportDataType.Summarized
+      );
+
+      this.dataToObject(result.data);
+    } catch (errors) {
+      console.log(errors);
     }
   }
 
