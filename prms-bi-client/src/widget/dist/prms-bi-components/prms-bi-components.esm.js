@@ -1,0 +1,2 @@
+import{p as e,b as t}from"./p-f2e554e8.js";export{s as setNonce}from"./p-f2e554e8.js";const o=()=>{const s=import.meta.url;const t={};if(s!==""){t.resourcesUrl=new URL(".",s).href}return e(t)};o().then((e=>t([["p-7f4bcf1f",[[1,"my-component",{first:[1],middle:[1],last:[1]}]]]],e)));
+//# sourceMappingURL=prms-bi-components.esm.js.map

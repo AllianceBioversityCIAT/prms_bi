@@ -8,12 +8,12 @@ declare var pbiwidget: any;
 })
 export class PlaygroundComponent {
   ngOnInit(): void {
-    // pbiwidget.init('dashboard-embed');
-    // pbiwidget.setFilters({ resultType: 'Capacity change', year: 2022 });
-    pbiwidget.init('dashboard-embed', {
-      resultType: 'Capacity change',
-      year: 2022,
-    });
-    pbiwidget.setFilters();
+    // // pbiwidget.init('dashboard-embed');
+    // // pbiwidget.setFilters({ resultType: 'Capacity change', year: 2022 });
+    // pbiwidget.init('dashboard-embed', {
+    //   resultType: 'Capacity change',
+    //   year: 2022,
+    // });
+    // pbiwidget.setFilters();
   }
 }
