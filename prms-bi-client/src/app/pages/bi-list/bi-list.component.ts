@@ -18,17 +18,15 @@ export class BiListComponent {
     this.getBiReportsWithCredentials();
   }
   getBiReportsWithCredentials() {
-    this.biImplementationSE.getBiReportsWithCredentials().subscribe((resp) => {
+    this.biImplementationSE.getBiReports().subscribe((resp) => {
+      this.reportsInformation = resp;
       console.log(resp);
-      const { reportsInformation } = resp;
-      this.reportsInformation = reportsInformation;
-      console.log(reportsInformation);
     });
   }
 
   getFilterData(report: any) {
     let filtersFunded = this.filtersByDashboardSE.filters.filter(
-      (filter) => filter.reportName == report.name
+      (filter) => filter.reportName == report.report_name
     );
 
     let data = `<strong>Quantity of filters:</strong> ${
