@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import * as pbi from 'powerbi-client';
 import { ExportTablesService } from './export-tables.service';
 import { FiltersByDashboardService } from './filters-by-dashboard.service';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +17,12 @@ export class BiImplementationService {
   ) {}
 
   apiBaseUrl = environment.apiBaseUrl + 'result-dashboard-bi';
-  getBiReportsWithCredentials() {
-    return this.http.get<any>(`${this.apiBaseUrl}/bi-reports`);
+  getBiReports() {
+    return this.http.get<any>(`${this.apiBaseUrl}/bi-reports`).pipe(
+      map((resp) => {
+        return resp?.response;
+      })
+    );
   }
 
   getBiReportWithCredentialsById(reportId: string) {
