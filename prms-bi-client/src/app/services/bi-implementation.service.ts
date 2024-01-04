@@ -5,6 +5,7 @@ import { ExportTablesService } from './export-tables.service';
 import { FiltersByDashboardService } from './filters-by-dashboard.service';
 import { map } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { IBDGoogleAnalytics } from 'ibdevkit';
 
 @Injectable({
   providedIn: 'root',
@@ -71,13 +72,10 @@ export class BiImplementationService {
 
       this.report.off('loaded');
       this.report.on('loaded', () => {
-        // console.log('Loaded');
         this.report.getFilters().then((filters: any) => {
-          // console.log(filters);
           this.filtersByDashboardSE.applyFilters(this.report, reportName);
         });
 
-        console.log('paginas');
         resolve(this.report);
       });
       this.report.on('error', (err: any) => {
@@ -109,20 +107,14 @@ export class BiImplementationService {
 
   exportButton(report: any) {
     // Insert here the code you want to run after the report is rendered
-
     // report.off removes all event handlers for a specific event
-
     report.off('bookmarkApplied');
-
     // report.on will add an event listener.
-
     report.on('bookmarkApplied', async (event: any) => {
       const bookmarkNameFound = await this.getBookmarkName(
         report,
         event.detail.bookmarkName
       );
-      console.log(bookmarkNameFound);
-
       this.detectButtonAndTable(report, bookmarkNameFound);
     });
   }
@@ -158,6 +150,7 @@ export class BiImplementationService {
       );
 
       this.dataToObject(result.data);
+      IBDGoogleAnalytics().trackEvent('download xlsx', 'file name');
     } catch (errors) {
       console.log(errors);
     }

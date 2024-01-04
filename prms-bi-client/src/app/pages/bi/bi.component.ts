@@ -37,9 +37,7 @@ export class BiComponent {
   }
 
   convertNameToTitle(name: string) {
-    name = name.replace(/-/g, ' ');
-    name = name.charAt(0).toUpperCase() + name.slice(1);
-    return name;
+    return name.replace(/-/g, ' ')?.charAt(0)?.toUpperCase() + name?.slice(1);
   }
 
   async getBiReportWithCredentialsByreportName() {
@@ -51,14 +49,10 @@ export class BiComponent {
           this.reportName
         )
       );
-
       const { token, report } = reportData;
 
       this.reportDescription = report?.description;
       this.reportDescriptionInnerHtml();
-
-      const filtervalue: any =
-        this.activatedRoute.snapshot.paramMap.get('filtervalue');
 
       await this.biImplementationSE.renderReport(
         token,
