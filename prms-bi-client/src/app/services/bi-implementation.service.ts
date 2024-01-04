@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 import * as pbi from 'powerbi-client';
 import { ExportTablesService } from './export-tables.service';
 import { FiltersByDashboardService } from './filters-by-dashboard.service';
 import { map } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +17,7 @@ export class BiImplementationService {
   ) {}
 
   apiBaseUrl = environment.apiBaseUrl + 'result-dashboard-bi';
+  report: any;
   getBiReports() {
     return this.http.get<any>(`${this.apiBaseUrl}/bi-reports`).pipe(
       map((resp) => {
@@ -37,43 +38,73 @@ export class BiImplementationService {
     );
   }
 
-  renderReport(accessToken: any, infoReport: any, reportName: string) {
-    // Embed URL
-    // console.log(infoReport);
-    let embedUrl = infoReport.embed_url;
-    let embedReportId = infoReport.resport_id;
-    let config = {
-      type: 'report',
-      tokenType: pbi.models.TokenType.Embed,
-      accessToken,
-      embedUrl: embedUrl,
-      id: embedReportId,
-      permissions: pbi.models.Permissions.All,
-      // pageView: 'fitToWidth',
-      settings: {
-        filterPaneEnabled: false,
-        navContentPaneEnabled: false,
-      },
-    };
-    var embedContainer: any = document.getElementById('reportContainer');
-    let powerbi = new pbi.service.Service(
-      pbi.factories.hpmFactory,
-      pbi.factories.wpmpFactory,
-      pbi.factories.routerFactory
-    );
-    let report: any = powerbi.embed(embedContainer, config);
-    report.off('loaded');
-    report.on('loaded', () => {
-      // console.log('Loaded');
-      report.getFilters().then((filters: any) => {
-        // console.log(filters);
-        this.filtersByDashboardSE.applyFilters(report, reportName);
+  renderReport(
+    accessToken: any,
+    infoReport: any,
+    reportName: string
+  ): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      // Embed URL
+      // console.log(infoReport);
+      let embedUrl = infoReport.embed_url;
+      let embedReportId = infoReport.resport_id;
+      let config = {
+        type: 'report',
+        tokenType: pbi.models.TokenType.Embed,
+        accessToken,
+        embedUrl: embedUrl,
+        id: embedReportId,
+        permissions: pbi.models.Permissions.All,
+        // pageView: 'fitToWidth',
+        settings: {
+          filterPaneEnabled: false,
+          navContentPaneEnabled: false,
+        },
+      };
+      var embedContainer: any = document.getElementById('reportContainer');
+      let powerbi = new pbi.service.Service(
+        pbi.factories.hpmFactory,
+        pbi.factories.wpmpFactory,
+        pbi.factories.routerFactory
+      );
+      this.report = powerbi.embed(embedContainer, config);
+
+      this.report.off('loaded');
+      this.report.on('loaded', () => {
+        // console.log('Loaded');
+        this.report.getFilters().then((filters: any) => {
+          // console.log(filters);
+          this.filtersByDashboardSE.applyFilters(this.report, reportName);
+        });
+
+        console.log('paginas');
+        resolve(this.report);
       });
+      this.report.on('error', (err: any) => {
+        console.log(err);
+        reject(err);
+      });
+      this.exportButton(this.report);
     });
-    report.on('error', (err: any) => {
-      console.log(err);
+  }
+
+  getReportName(): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      this.report
+        .getPages()
+        .then((pages: pbi.Page[]) => {
+          const activePage = pages.find((page) => page.isActive);
+
+          if (activePage) {
+            resolve(activePage.displayName);
+          } else {
+            reject('No se pudo obtener el nombre de la página activa.');
+          }
+        })
+        .catch((error: any) => {
+          reject(error);
+        });
     });
-    this.exportButton(report);
   }
 
   exportButton(report: any) {

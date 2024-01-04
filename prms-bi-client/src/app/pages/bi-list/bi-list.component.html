@@ -1,5 +1,5 @@
 <div class="reports">
-  <a [routerLink]="'/bi/'+report.report_name" target="_blank" [queryParams]="report?.queryParams"
+  <a [routerLink]="'/bi/'+report.report_name" [queryParams]="report?.queryParams"
     *ngFor="let report of this.reportsInformation; let i=index">
     <div class="report_title">{{report?.report_title}}</div>
     <div class="report_description" [innerHTML]="report.report_description"></div>

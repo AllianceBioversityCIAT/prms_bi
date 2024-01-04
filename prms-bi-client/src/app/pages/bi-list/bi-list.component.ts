@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { BiImplementationService } from '../../services/bi-implementation.service';
 import { FiltersByDashboardService } from '../../services/filters-by-dashboard.service';
-
 @Component({
   selector: 'app-bi-list',
   templateUrl: './bi-list.component.html',

@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy-test": "ng build && cd ../scripts && start ups3-test.bat",
-    "deploy-prod": "ng build && cd ../scripts && start ups3-prod.bat",
+    "deploy-test": "ng build --configuration development && cd ../scripts && start ups3-test.bat",
+    "deploy-prod": "ng build --configuration production && cd ../scripts && start ups3-prod.bat",
     "deploy-all-envs": "ng build && cd ../scripts && start ups3-test.bat && start ups3-prod.bat"
   },
   "private": true,
@@ -23,6 +23,7 @@
     "@angular/router": "^15.1.0",
     "csvtojson": "^2.0.10",
     "file-saver": "^2.0.5",
+    "ibdevkit": "^0.0.37",
     "powerbi-client": "^2.22.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
