@@ -1,3 +1,7 @@
+<ng-container *ngIf="this.biImplementationSE.showExportSpinner">
+  <app-loader></app-loader>
+</ng-container>
+
 <div class="reportDescription" id="reportDescription"></div>
 <div #reportContainer id="reportContainer" *ngIf="this.reportName" [style.height]="biHeight()">
 </div>

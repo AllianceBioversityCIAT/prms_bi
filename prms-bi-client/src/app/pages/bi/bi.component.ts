@@ -15,9 +15,8 @@ export class BiComponent {
   reportName = '';
   reportDescription = '';
   constructor(
-    private biImplementationSE: BiImplementationService,
+    public biImplementationSE: BiImplementationService,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
     private titleService: Title
   ) {}
 
@@ -36,9 +35,8 @@ export class BiComponent {
     return `calc(100vh - 16px - ${reportDescriptionHtml?.clientHeight || 0}px)`;
   }
 
-  convertNameToTitle(name: string) {
-    return name.replace(/-/g, ' ')?.charAt(0)?.toUpperCase() + name?.slice(1);
-  }
+  convertNameToTitle = (name: string) =>
+    name.replace(/-/g, ' ')?.charAt(0)?.toUpperCase() + name?.slice(1);
 
   async getBiReportWithCredentialsByreportName() {
     if (!this.reportName) return;

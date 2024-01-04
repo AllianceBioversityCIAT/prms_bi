@@ -19,6 +19,7 @@ export class BiImplementationService {
 
   apiBaseUrl = environment.apiBaseUrl + 'result-dashboard-bi';
   report: any;
+  showExportSpinner = false;
   getBiReports() {
     return this.http.get<any>(`${this.apiBaseUrl}/bi-reports`).pipe(
       map((resp) => {
@@ -128,7 +129,7 @@ export class BiImplementationService {
   async detectButtonAndTable(report: any, bookmarkName: any) {
     if (bookmarkName.search('export_data') < 0) return;
     console.log('Exporting data...\n');
-
+    this.showExportSpinner = true;
     try {
       const pages = await report.getPages();
       let page = pages.filter((page: any) => {
@@ -146,15 +147,14 @@ export class BiImplementationService {
         pbi.models.ExportDataType.Summarized
       );
 
-      this.dataToObject(result.data);
+      console.log('export');
+      await this.exportTablesSE.exportExcel(result.data, 'file');
+      console.log('exported');
       IBDGoogleAnalytics().trackEvent('download xlsx', 'file name');
     } catch (errors) {
       console.log(errors);
     }
-  }
 
-  dataToObject(data: any) {
-    console.log(data);
-    this.exportTablesSE.exportExcel(data, 'file');
+    this.showExportSpinner = false;
   }
 }
