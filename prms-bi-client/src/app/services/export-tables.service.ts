@@ -37,7 +37,6 @@ export class ExportTablesService {
   async exportExcel(csvText: any, fileName: string, wscols?: Wscols[]) {
     this.localCsvToJson(csvText).then((list: any) => {
       try {
-        console.log(window['xlsx' as any]);
         import('xlsx').then((xlsx) => {
           const worksheet = xlsx.utils.json_to_sheet(list, {
             skipHeader: Boolean(wscols?.length),
@@ -51,7 +50,6 @@ export class ExportTablesService {
             bookType: 'xlsx',
             type: 'array',
           });
-          console.log(window['xlsx' as any]);
 
           this.saveAsExcelFile(excelBuffer, fileName);
         });

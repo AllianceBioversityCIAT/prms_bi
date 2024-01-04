@@ -19,7 +19,6 @@ export class BiListComponent {
   getBiReportsWithCredentials() {
     this.biImplementationSE.getBiReports().subscribe((resp) => {
       this.reportsInformation = resp;
-      console.log(resp);
     });
   }
 

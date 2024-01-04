@@ -121,10 +121,7 @@ export class BiImplementationService {
 
   async getBookmarkName(report: any, bookmarkId: any) {
     const bookmarks = await report.bookmarksManager.getBookmarks();
-
     const bookmarkFound = bookmarks.find((bm: any) => bm.name == bookmarkId);
-
-    console.log(bookmarkFound?.displayName);
     return bookmarkFound?.displayName;
   }
 
