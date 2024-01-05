@@ -48,14 +48,14 @@ export class BiComponent {
         )
       );
       const { token, report } = reportData;
-
       this.reportDescription = report?.description;
       this.reportDescriptionInnerHtml();
 
       await this.biImplementationSE.renderReport(
         token,
         report,
-        this.reportName
+        this.reportName,
+        report?.dateText
       );
       const reportPageName = await this.biImplementationSE.getReportName();
       this.gATracking(report, reportPageName);

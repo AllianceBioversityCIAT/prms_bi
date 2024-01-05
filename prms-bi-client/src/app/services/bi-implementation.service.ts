@@ -20,6 +20,8 @@ export class BiImplementationService {
   apiBaseUrl = environment.apiBaseUrl + 'result-dashboard-bi';
   report: any;
   showExportSpinner = false;
+  dateText = '';
+
   getBiReports() {
     return this.http.get<any>(`${this.apiBaseUrl}/bi-reports`).pipe(
       map((resp) => {
@@ -43,7 +45,8 @@ export class BiImplementationService {
   renderReport(
     accessToken: any,
     infoReport: any,
-    reportName: string
+    reportName: string,
+    dateText: string
   ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       // Embed URL
@@ -62,8 +65,11 @@ export class BiImplementationService {
           filterPaneEnabled: false,
           navContentPaneEnabled: false,
         },
+        fullscreen: {
+          enabled: true, // Habilitar pantalla completa
+        },
       };
-      var embedContainer: any = document.getElementById('reportContainer');
+      let embedContainer: any = document.getElementById('reportContainer');
       let powerbi = new pbi.service.Service(
         pbi.factories.hpmFactory,
         pbi.factories.wpmpFactory,
@@ -81,9 +87,10 @@ export class BiImplementationService {
       });
       this.report.on('error', (err: any) => {
         console.log(err);
+        window.location.reload();
         reject(err);
       });
-      this.exportButton(this.report);
+      this.exportButton(this.report, dateText);
     });
   }
 
@@ -106,7 +113,7 @@ export class BiImplementationService {
     });
   }
 
-  exportButton(report: any) {
+  exportButton(report: any, dateText: string) {
     // Insert here the code you want to run after the report is rendered
     // report.off removes all event handlers for a specific event
     report.off('bookmarkApplied');
@@ -116,7 +123,7 @@ export class BiImplementationService {
         report,
         event.detail.bookmarkName
       );
-      this.detectButtonAndTable(report, bookmarkNameFound);
+      this.detectButtonAndTable(report, bookmarkNameFound, dateText);
     });
   }
 
@@ -126,7 +133,7 @@ export class BiImplementationService {
     return bookmarkFound?.displayName;
   }
 
-  async detectButtonAndTable(report: any, bookmarkName: any) {
+  async detectButtonAndTable(report: any, bookmarkName: any, dateText: string) {
     if (bookmarkName.search('export_data') < 0) return;
     console.log('Exporting data...\n');
     this.showExportSpinner = true;
@@ -148,7 +155,10 @@ export class BiImplementationService {
       );
 
       console.log('export');
-      await this.exportTablesSE.exportExcel(result.data, 'file');
+      await this.exportTablesSE.exportExcel(
+        result.data,
+        'export_data_table_results_' + dateText
+      );
       console.log('exported');
       IBDGoogleAnalytics().trackEvent('download xlsx', 'file name');
     } catch (errors) {
