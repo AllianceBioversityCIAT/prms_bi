@@ -56,10 +56,9 @@ export class BiComponent {
       });
 
       const dateText = dateCET.split(',');
-      const dateDay = dateText[0].split('/').reverse().join('');
       const dateTime = dateText[1].split(':').join('');
 
-      const fullDateText = `${dateDay}_${dateTime.trim()}`;
+      const fullDateText = `${report?.dateText.slice(0, 8)}_${dateTime.trim()}`;
 
       this.reportDescription = report?.description;
       this.reportDescriptionInnerHtml();
