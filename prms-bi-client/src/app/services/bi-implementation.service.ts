@@ -157,7 +157,7 @@ export class BiImplementationService {
       console.log('export');
       await this.exportTablesSE.exportExcel(
         result.data,
-        'export_data_table_results_' + dateText
+        `export_data_table_results_${dateText}CET`
       );
       console.log('exported');
       IBDGoogleAnalytics().trackEvent('download xlsx', 'file name');
