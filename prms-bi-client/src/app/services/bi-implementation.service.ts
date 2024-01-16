@@ -6,6 +6,7 @@ import { FiltersByDashboardService } from './filters-by-dashboard.service';
 import { map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { IBDGoogleAnalytics } from 'ibdevkit';
+import { VariablesService } from './variables.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,8 @@ export class BiImplementationService {
   constructor(
     public http: HttpClient,
     private exportTablesSE: ExportTablesService,
-    private filtersByDashboardSE: FiltersByDashboardService
+    private filtersByDashboardSE: FiltersByDashboardService,
+    private variablesSE: VariablesService
   ) {}
 
   apiBaseUrl = environment.apiBaseUrl + 'result-dashboard-bi';
@@ -81,6 +83,7 @@ export class BiImplementationService {
       this.report.on('loaded', () => {
         this.report.getFilters().then((filters: any) => {
           this.filtersByDashboardSE.applyFilters(this.report, reportName);
+          this.variablesSE.processes[3].works = true;
         });
 
         resolve(this.report);

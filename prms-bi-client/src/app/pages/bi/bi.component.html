@@ -36,8 +36,8 @@
 <h1 *ngIf="!this.reportName">No reportName</h1>
 
 <div class="monitor_panel" *ngIf="this.showMonitorPanel">
-  <div class="process" *ngFor="let process of processes">
-    <i class="material-icons-round" [ngClass]="{'bad': process.works}">
+  <div class="process" *ngFor="let process of this.variablesSE.processes">
+    <i class="material-icons-round" [ngClass]="{'bad': !process.works}">
       {{process.works?'check_circle':'cancel'}}
     </i>
     <div class="text">{{process.name}}</div>

@@ -6,6 +6,7 @@ import { IBDGoogleAnalytics } from 'ibdevkit';
 import { environment } from '../../../environments/environment';
 import { firstValueFrom } from 'rxjs';
 import { TabVisibilityService } from 'src/app/services/tab-visibility.service';
+import { VariablesService } from '../../services/variables.service';
 
 @Component({
   selector: 'app-bi',
@@ -18,17 +19,13 @@ export class BiComponent implements OnInit {
   isFullScreen = false;
   wasInactive = false;
   showMonitorPanel = false;
-  processes = [
-    { name: 'Azure Authentication', works: false },
-    { name: 'PowerBI Platform', works: true },
-    { name: 'Application Backend', works: true },
-    { name: 'Web page', works: true },
-  ];
+
   constructor(
     public biImplementationSE: BiImplementationService,
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
-    private tabVisibilityService: TabVisibilityService
+    private tabVisibilityService: TabVisibilityService,
+    public variablesSE: VariablesService
   ) {}
 
   async ngOnInit() {
@@ -115,6 +112,8 @@ export class BiComponent implements OnInit {
 
       const { token, report } = reportData;
 
+      this.variablesSE.processes[2].works = true;
+
       const dateCET = new Date().toLocaleString('en-US', {
         timeZone: 'Europe/Madrid',
         hour12: false,
@@ -139,6 +138,7 @@ export class BiComponent implements OnInit {
     } catch (error) {
       console.log(error);
       this.reportDescriptionInnerHtml();
+      this.variablesSE.processes[2].works = false;
     }
   }
 
