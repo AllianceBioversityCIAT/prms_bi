@@ -6,6 +6,17 @@ $bg: #242424;
 $c-01: #f1c911;
 $c-02: #fde681;
 
+.loader_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.2);
+}
+
 .content {
   width: 200px;
   height: 80px;

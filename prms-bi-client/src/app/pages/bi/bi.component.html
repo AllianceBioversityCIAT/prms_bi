@@ -3,7 +3,11 @@
 </ng-container>
 
 <div class="reportDescription" id="reportDescription"></div>
-<div #reportContainer id="reportContainer" *ngIf="this.reportName" [style.height]="biHeight()">
-</div>
+<div
+  #reportContainer
+  id="reportContainer"
+  *ngIf="this.reportName"
+  [style.height]="biHeight()"
+></div>
 
 <h1 *ngIf="!this.reportName">No reportName</h1>

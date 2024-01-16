@@ -47,7 +47,19 @@ export class BiComponent {
           this.reportName
         )
       );
+
       const { token, report } = reportData;
+
+      const dateCET = new Date().toLocaleString('en-US', {
+        timeZone: 'Europe/Madrid',
+        hour12: false,
+      });
+
+      const dateText = dateCET.split(',');
+      const dateTime = dateText[1].split(':').join('');
+
+      const fullDateText = `${report?.dateText.slice(0, 8)}_${dateTime.trim()}`;
+
       this.reportDescription = report?.description;
       this.reportDescriptionInnerHtml();
 
@@ -55,7 +67,7 @@ export class BiComponent {
         token,
         report,
         this.reportName,
-        report?.dateText
+        fullDateText
       );
       const reportPageName = await this.biImplementationSE.getReportName();
       this.gATracking(report, reportPageName);
