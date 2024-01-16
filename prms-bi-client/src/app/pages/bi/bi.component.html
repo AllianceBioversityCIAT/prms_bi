@@ -31,11 +31,15 @@
 
 <div class="reportDescription" id="reportDescription"></div>
 
-<div
-  #reportContainer
-  id="reportContainer"
-  *ngIf="this.reportName"
-  [style.height]="biHeight()"
-></div>
+<div #reportContainer id="reportContainer" *ngIf="this.reportName" [style.height]="biHeight()"></div>
 
 <h1 *ngIf="!this.reportName">No reportName</h1>
+
+<div class="monitor_panel" *ngIf="this.showMonitorPanel">
+  <div class="process" *ngFor="let process of processes">
+    <i class="material-icons-round" [ngClass]="{'bad': process.works}">
+      {{process.works?'check_circle':'cancel'}}
+    </i>
+    <div class="text">{{process.name}}</div>
+  </div>
+</div>

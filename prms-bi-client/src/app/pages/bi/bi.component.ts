@@ -17,7 +17,13 @@ export class BiComponent implements OnInit {
   reportDescription = '';
   isFullScreen = false;
   wasInactive = false;
-
+  showMonitorPanel = false;
+  processes = [
+    { name: 'Azure Authentication', works: false },
+    { name: 'PowerBI Platform', works: true },
+    { name: 'Application Backend', works: true },
+    { name: 'Web page', works: true },
+  ];
   constructor(
     public biImplementationSE: BiImplementationService,
     private activatedRoute: ActivatedRoute,
@@ -26,6 +32,7 @@ export class BiComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.runEvents();
     this.getQueryParams();
     this.getBiReportWithCredentialsByreportName();
     this.tabVisibilityService.tabVisibilityChanged.subscribe(
@@ -35,6 +42,14 @@ export class BiComponent implements OnInit {
         }
       }
     );
+  }
+
+  runEvents() {
+    const eventName = this.activatedRoute.snapshot.paramMap.get('event') || '';
+    if (eventName == 'monitor') {
+      console.log('monitor event');
+      this.showMonitorPanel = true;
+    }
   }
 
   reloadPage() {
