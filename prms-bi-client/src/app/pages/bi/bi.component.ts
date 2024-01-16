@@ -36,8 +36,8 @@ export class BiComponent implements OnInit {
     this.getQueryParams();
     this.getBiReportWithCredentialsByreportName();
     this.tabVisibilityService.tabVisibilityChanged.subscribe(
-      (isTabInactiveFor3Minutes: boolean) => {
-        if (isTabInactiveFor3Minutes) {
+      (isTabInactiveFor10Minutes: boolean) => {
+        if (isTabInactiveFor10Minutes) {
           this.wasInactive = true;
         }
       }
@@ -97,7 +97,7 @@ export class BiComponent implements OnInit {
 
   biHeight() {
     const reportDescriptionHtml = document.getElementById('reportDescription');
-    return `calc(100vh - 16px - ${reportDescriptionHtml?.clientHeight || 0}px)`;
+    return `calc(100vh - 65px - ${reportDescriptionHtml?.clientHeight ?? 0}px)`;
   }
 
   convertNameToTitle = (name: string) =>
