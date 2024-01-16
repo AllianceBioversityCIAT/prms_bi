@@ -86,8 +86,8 @@ export class BiImplementationService {
         resolve(this.report);
       });
       this.report.on('error', (err: any) => {
+        console.log('Error detected');
         console.log(err);
-        window.location.reload();
         reject(err);
       });
       this.exportButton(this.report, dateText);
