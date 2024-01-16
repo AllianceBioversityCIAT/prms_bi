@@ -2,7 +2,14 @@
   <app-loader></app-loader>
 </ng-container>
 
+<div class="fullScreen-container">
+  <button class="btn-fullscreen" (click)="this.toggleFullScreen()">
+    <span *ngIf="this.isFullScreen">Exit</span> Full Screen
+  </button>
+</div>
+
 <div class="reportDescription" id="reportDescription"></div>
+
 <div
   #reportContainer
   id="reportContainer"

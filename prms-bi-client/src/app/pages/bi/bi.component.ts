@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BiImplementationService } from '../../services/bi-implementation.service';
 import { Title } from '@angular/platform-browser';
 import { IBDGoogleAnalytics } from 'ibdevkit';
@@ -11,9 +11,10 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './bi.component.html',
   styleUrls: ['./bi.component.scss'],
 })
-export class BiComponent {
+export class BiComponent implements OnInit {
   reportName = '';
   reportDescription = '';
+  isFullScreen = false;
   constructor(
     public biImplementationSE: BiImplementationService,
     private activatedRoute: ActivatedRoute,
@@ -23,6 +24,41 @@ export class BiComponent {
   async ngOnInit() {
     this.getQueryParams();
     this.getBiReportWithCredentialsByreportName();
+  }
+
+  // create a function to toggle fullscreen mode
+  toggleFullScreen() {
+    const fullscreenElement =
+      document.fullscreenElement ||
+      (document as any).mozFullScreenElement ||
+      (document as any).msFullscreenElement ||
+      (document as any).webkitFullscreenElement;
+
+    if (!fullscreenElement) {
+      const element = document.documentElement;
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if ((element as any).mozRequestFullScreen) {
+        (element as any).mozRequestFullScreen();
+      } else if ((element as any).webkitRequestFullscreen) {
+        (element as any).webkitRequestFullscreen();
+      } else if ((element as any).msRequestFullscreen) {
+        (element as any).msRequestFullscreen();
+      }
+      this.isFullScreen = true;
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if ((document as any).mozCancelFullScreen) {
+        (document as any).mozCancelFullScreen();
+      } else if ((document as any).webkitExitFullscreen) {
+        (document as any).webkitExitFullscreen();
+      } else if ((document as any).msExitFullscreen) {
+        (document as any).msExitFullscreen();
+      }
+
+      this.isFullScreen = false;
+    }
   }
 
   getQueryParams() {

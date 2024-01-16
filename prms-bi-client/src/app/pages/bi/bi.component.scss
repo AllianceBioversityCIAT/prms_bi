@@ -1,7 +1,31 @@
 #reportContainer {
-    width: 100%;
+  width: 100%;
 
-    iframe {
-        border: none !important;
-    }
+  iframe {
+    border: none !important;
+  }
+}
+
+.fullScreen-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.btn-fullscreen {
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background-color: #5569dd;
+  color: white;
+  border: 1px solid #5569dd;
+
+  transition: all ease-in-out 0.3s;
+
+  &:hover {
+    background-color: white;
+    color: black;
+  }
 }
