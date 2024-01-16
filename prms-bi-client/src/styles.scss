@@ -1,15 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Round');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500&display=swap');
 
 * {
-    font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 iframe {
-    border: none !important;
+  border: none !important;
 }
 
 .danger-error-text {
-    color: red;
-    font-weight: 500;
+  color: red;
+  font-weight: 500;
 }
