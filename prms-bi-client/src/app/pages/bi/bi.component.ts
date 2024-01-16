@@ -5,6 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { IBDGoogleAnalytics } from 'ibdevkit';
 import { environment } from '../../../environments/environment';
 import { firstValueFrom } from 'rxjs';
+import { TabVisibilityService } from 'src/app/services/tab-visibility.service';
 
 @Component({
   selector: 'app-bi',
@@ -15,18 +16,31 @@ export class BiComponent implements OnInit {
   reportName = '';
   reportDescription = '';
   isFullScreen = false;
+  wasInactive = false;
+
   constructor(
     public biImplementationSE: BiImplementationService,
     private activatedRoute: ActivatedRoute,
-    private titleService: Title
+    private titleService: Title,
+    private tabVisibilityService: TabVisibilityService
   ) {}
 
   async ngOnInit() {
     this.getQueryParams();
     this.getBiReportWithCredentialsByreportName();
+    this.tabVisibilityService.tabVisibilityChanged.subscribe(
+      (isTabInactiveFor3Minutes: boolean) => {
+        if (isTabInactiveFor3Minutes) {
+          this.wasInactive = true;
+        }
+      }
+    );
   }
 
-  // create a function to toggle fullscreen mode
+  reloadPage() {
+    window.location.reload();
+  }
+
   toggleFullScreen() {
     const fullscreenElement =
       document.fullscreenElement ||

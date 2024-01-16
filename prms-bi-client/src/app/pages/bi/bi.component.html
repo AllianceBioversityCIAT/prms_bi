@@ -2,9 +2,30 @@
   <app-loader></app-loader>
 </ng-container>
 
+<div class="inactive-alert">
+  <div class="inactive-alert__content">
+    <div class="inactive-alert__title">Inactive Report</div>
+    <div class="inactive-alert__description">
+      This report has been inactive for more than 30 minutes.
+      <br />
+      Please reload the page.
+    </div>
+
+    <div class="inactive-alert__button">
+      <button class="btn" (click)="this.reloadPage()">
+        <i class="material-icons-round" style="font-size: 16px"> refresh </i>
+        Reload Page
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="fullScreen-container">
-  <button class="btn-fullscreen" (click)="this.toggleFullScreen()">
-    <span *ngIf="this.isFullScreen">Exit</span> Full Screen
+  <button class="btn" (click)="toggleFullScreen()">
+    <span>{{ isFullScreen ? "Exit full Screen" : "Full Screen" }}</span>
+    <i class="material-icons-round" style="font-size: 16px">
+      {{ isFullScreen ? "close_fullscreen" : "open_in_full" }}
+    </i>
   </button>
 </div>
 
