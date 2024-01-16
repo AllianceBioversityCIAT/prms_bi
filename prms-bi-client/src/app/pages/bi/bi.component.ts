@@ -29,8 +29,8 @@ export class BiComponent implements OnInit {
     this.getQueryParams();
     this.getBiReportWithCredentialsByreportName();
     this.tabVisibilityService.tabVisibilityChanged.subscribe(
-      (isTabInactiveFor3Minutes: boolean) => {
-        if (isTabInactiveFor3Minutes) {
+      (isTabInactiveFor10Minutes: boolean) => {
+        if (isTabInactiveFor10Minutes) {
           this.wasInactive = true;
         }
       }
