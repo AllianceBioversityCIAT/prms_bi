@@ -2,7 +2,7 @@
   <app-loader></app-loader>
 </ng-container>
 
-<div class="inactive-alert">
+<div class="inactive-alert" *ngIf="this.wasInactive">
   <div class="inactive-alert__content">
     <div class="inactive-alert__title">Inactive Report</div>
     <div class="inactive-alert__description">
