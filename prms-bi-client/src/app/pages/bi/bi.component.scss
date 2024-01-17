@@ -136,6 +136,11 @@
     align-items: center;
     gap: 10px;
 
+    .loader {
+      color: #575757 !important;
+      animation: pulse 1s infinite;
+    }
+
     i {
       color: rgb(0, 165, 0) !important;
 
@@ -151,5 +156,19 @@
     .text {
       font-size: .9rem;
     }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(.8);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(.8);
   }
 }
