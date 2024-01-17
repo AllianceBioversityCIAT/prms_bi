@@ -36,9 +36,42 @@
 <h1 *ngIf="!this.reportName">No reportName</h1>
 
 <div class="monitor_panel" *ngIf="this.showMonitorPanel">
+  <div class="help">
+    <i class="help_icon material-icons-round">
+      help
+    </i>
+    <div class="explanation">
+      <div class="process">
+        <i class="material-icons-round bad">
+          cancel
+        </i>
+        <div class="text">
+          Error generating
+        </div>
+      </div>
+      <div class="process">
+        <i class="material-icons-round">
+          check_circle
+        </i>
+        <div class="text">
+          Successful generation
+        </div>
+      </div>
+      <div class="process">
+        <i class="material-icons-round optional">
+          fiber_manual_record
+        </i>
+        <div class="text">
+          Not necessary at this time
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <div class="process" *ngFor="let process of this.variablesSE.processes">
-    <i class="material-icons-round" [ngClass]="{'bad': !process.works}">
-      {{process.works?'check_circle':'cancel'}}
+    <i class="material-icons-round" [ngClass]="{'bad': !process.works,'optional':process.works == 2}">
+      {{process.works == 2 ?'fiber_manual_record': (process.works?'check_circle':'cancel')}}
     </i>
     <div class="text">{{process.name}}</div>
   </div>

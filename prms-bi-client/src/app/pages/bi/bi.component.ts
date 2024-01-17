@@ -97,6 +97,24 @@ export class BiComponent implements OnInit {
     return `calc(100vh - 65px - ${reportDescriptionHtml?.clientHeight ?? 0}px)`;
   }
 
+  validateBAckResponseProcess(reportData: any) {
+    const { token, azureValidation } = reportData;
+    if (token) this.variablesSE.processes[1].works = true;
+    this.variablesSE.processes[2].works = true;
+    console.log(azureValidation);
+    switch (azureValidation) {
+      case 1:
+        this.variablesSE.processes[0].works = true;
+        break;
+      case 2:
+        this.variablesSE.processes[0].works = 2;
+        break;
+      default:
+        this.variablesSE.processes[0].works = false;
+        break;
+    }
+  }
+
   convertNameToTitle = (name: string) =>
     name.replace(/-/g, ' ')?.charAt(0)?.toUpperCase() + name?.slice(1);
 
@@ -110,9 +128,11 @@ export class BiComponent implements OnInit {
         )
       );
 
+      console.log(reportData.azureValidation);
+
       const { token, report } = reportData;
 
-      this.variablesSE.processes[2].works = true;
+      this.validateBAckResponseProcess(reportData);
 
       const dateCET = new Date().toLocaleString('en-US', {
         timeZone: 'Europe/Madrid',

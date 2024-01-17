@@ -4,11 +4,11 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class VariablesService {
-  processes = [
+  processes: any[] = [
     { name: 'Azure Authentication', works: false },
     { name: 'PowerBI Platform', works: false },
     { name: 'Application Backend', works: false },
-    { name: 'Web page', works: false },
+    { name: 'Embedded', works: false },
   ];
   constructor() {}
 }
