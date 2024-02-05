@@ -17,6 +17,7 @@ export class BiComponent implements OnInit {
   reportName = '';
   reportDescription = '';
   isFullScreen = false;
+  showFullScreen = false;
   wasInactive = false;
   showMonitorPanel = false;
 
@@ -44,7 +45,6 @@ export class BiComponent implements OnInit {
   runEvents() {
     const eventName = this.activatedRoute.snapshot.paramMap.get('event') || '';
     if (eventName == 'monitor') {
-      console.log('monitor event');
       this.showMonitorPanel = true;
     }
   }
@@ -101,7 +101,6 @@ export class BiComponent implements OnInit {
     const { token, azureValidation } = reportData;
     if (token) this.variablesSE.processes[1].works = true;
     this.variablesSE.processes[2].works = true;
-    console.log(azureValidation);
     switch (azureValidation) {
       case 1:
         this.variablesSE.processes[0].works = true;
@@ -128,9 +127,9 @@ export class BiComponent implements OnInit {
         )
       );
 
-      console.log(reportData.azureValidation);
 
       const { token, report } = reportData;
+      this.showFullScreen = report?.hasFullScreen;
 
       this.validateBAckResponseProcess(reportData);
 
@@ -142,7 +141,7 @@ export class BiComponent implements OnInit {
       const dateText = dateCET.split(',');
       const dateTime = dateText[1].split(':').join('');
 
-      const fullDateText = `${report?.dateText.slice(0, 8)}_${dateTime.trim()}`;
+      const fullDateText = `${report?.dateText?.slice(0, 8)}_${dateTime.trim()}`;
 
       this.reportDescription = report?.description;
       this.reportDescriptionInnerHtml();

@@ -20,7 +20,7 @@
   </div>
 </div>
 
-<div class="fullScreen-container">
+<div class="fullScreen-container" *ngIf="this.showFullScreen">
   <button class="btn" (click)="toggleFullScreen()">
     <span>{{ isFullScreen ? "Exit full Screen" : "Full Screen" }}</span>
     <i class="material-icons-round" style="font-size: 16px">
