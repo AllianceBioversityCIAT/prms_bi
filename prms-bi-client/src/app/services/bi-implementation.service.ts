@@ -22,7 +22,6 @@ export class BiImplementationService {
   apiBaseUrl = environment.apiBaseUrl + 'result-dashboard-bi';
   report: any;
   showExportSpinner = false;
-  dateText = '';
 
   getBiReports() {
     return this.http.get<any>(`${this.apiBaseUrl}/bi-reports`).pipe(
@@ -47,8 +46,7 @@ export class BiImplementationService {
   renderReport(
     accessToken: any,
     infoReport: any,
-    reportName: string,
-    dateText: string
+    reportName: string
   ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       // Embed URL
@@ -93,7 +91,7 @@ export class BiImplementationService {
         console.log(err);
         reject(err);
       });
-      this.exportButton(this.report, dateText);
+      this.exportButton(this.report);
     });
   }
 
@@ -116,7 +114,7 @@ export class BiImplementationService {
     });
   }
 
-  exportButton(report: any, dateText: string) {
+  exportButton(report: any) {
     // Insert here the code you want to run after the report is rendered
     // report.off removes all event handlers for a specific event
     report.off('bookmarkApplied');
@@ -126,7 +124,7 @@ export class BiImplementationService {
         report,
         event.detail.bookmarkName
       );
-      this.detectButtonAndTable(report, bookmarkNameFound, dateText);
+      this.detectButtonAndTable(report, bookmarkNameFound);
     });
   }
 
@@ -136,7 +134,7 @@ export class BiImplementationService {
     return bookmarkFound?.displayName;
   }
 
-  async detectButtonAndTable(report: any, bookmarkName: any, dateText: string) {
+  async detectButtonAndTable(report: any, bookmarkName: any) {
     if (bookmarkName.search('export_data') < 0) return;
     console.log('Exporting data...\n');
     this.showExportSpinner = true;
@@ -157,12 +155,27 @@ export class BiImplementationService {
         pbi.models.ExportDataType.Summarized
       );
 
+      const dateCETTime = new Date().toLocaleString('en-US', {
+        timeZone: 'Europe/Madrid',
+        hour12: false,
+      });
+
+      const dateCET =
+        new Date().getFullYear() +
+        ('0' + new Date().getDate().toLocaleString('es-ES')).slice(-2) +
+        ('0' + (new Date().getMonth() + 1)).slice(-2);
+
+      const dateText1 = dateCETTime.split(',');
+      const dateTime = dateText1[1].split(':').join('');
+
       console.log('export');
       await this.exportTablesSE.exportExcel(
         result.data,
-        `export_data_table_results_${dateText}CET`
+        `export_data_table_results_${dateCET}_${dateTime.trim()}CET`
       );
       console.log('exported');
+      console.log('dateCET', dateCET);
+      console.log('dateTime', dateTime);
       IBDGoogleAnalytics().trackEvent('download xlsx', 'file name');
     } catch (errors) {
       console.log(errors);

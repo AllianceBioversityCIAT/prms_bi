@@ -127,21 +127,10 @@ export class BiComponent implements OnInit {
         )
       );
 
-
       const { token, report } = reportData;
       this.showFullScreen = report?.hasFullScreen;
 
       this.validateBAckResponseProcess(reportData);
-
-      const dateCET = new Date().toLocaleString('en-US', {
-        timeZone: 'Europe/Madrid',
-        hour12: false,
-      });
-
-      const dateText = dateCET.split(',');
-      const dateTime = dateText[1].split(':').join('');
-
-      const fullDateText = `${report?.dateText?.slice(0, 8)}_${dateTime.trim()}`;
 
       this.reportDescription = report?.description;
       this.reportDescriptionInnerHtml();
@@ -149,8 +138,7 @@ export class BiComponent implements OnInit {
       await this.biImplementationSE.renderReport(
         token,
         report,
-        this.reportName,
-        fullDateText
+        this.reportName
       );
       const reportPageName = await this.biImplementationSE.getReportName();
       this.gATracking(report, reportPageName);
