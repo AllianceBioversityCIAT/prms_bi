@@ -15,6 +15,7 @@ import { VariablesService } from '../../services/variables.service';
 })
 export class BiComponent implements OnInit {
   reportName = '';
+  sectionNumber = '';
   reportDescription = '';
   isFullScreen = false;
   showFullScreen = false;
@@ -90,6 +91,9 @@ export class BiComponent implements OnInit {
   getQueryParams() {
     this.reportName =
       this.activatedRoute.snapshot.paramMap.get('reportName') || '';
+    this.sectionNumber = this.activatedRoute.snapshot.queryParams['sectionNumber'];
+
+
   }
 
   biHeight() {
@@ -114,8 +118,7 @@ export class BiComponent implements OnInit {
     }
   }
 
-  convertNameToTitle = (name: string) =>
-    name.replace(/-/g, ' ')?.charAt(0)?.toUpperCase() + name?.slice(1);
+
 
   async getBiReportWithCredentialsByreportName() {
     if (!this.reportName) return;
@@ -123,12 +126,15 @@ export class BiComponent implements OnInit {
     try {
       const reportData = await firstValueFrom(
         this.biImplementationSE.getBiReportWithCredentialsByreportName(
-          this.reportName
+          {report_name:this.reportName, subpage_id: this.sectionNumber}
         )
       );
 
       const { token, report } = reportData;
       this.showFullScreen = report?.hasFullScreen;
+
+      const mainPage = report?.mainPage;
+
 
       this.validateBAckResponseProcess(reportData);
 
@@ -138,10 +144,12 @@ export class BiComponent implements OnInit {
       await this.biImplementationSE.renderReport(
         token,
         report,
-        this.reportName
+        this.reportName,
+        mainPage
       );
       const reportPageName = await this.biImplementationSE.getReportName();
-      this.gATracking(report, reportPageName);
+      this.biImplementationSE.currentReportName = report?.name;
+      this.gATracking(reportPageName);
     } catch (error) {
       console.log(error);
       this.reportDescriptionInnerHtml();
@@ -149,9 +157,9 @@ export class BiComponent implements OnInit {
     }
   }
 
-  gATracking(report: any, reportPageName: string) {
+  gATracking( reportPageName: string) {
     this.titleService.setTitle(
-      this.convertNameToTitle(`${report?.name} (${reportPageName})`)
+      this.biImplementationSE.convertNameToTitle(reportPageName)
     );
     IBDGoogleAnalytics().initialize(environment.googleAnalyticsId);
   }

@@ -11,9 +11,12 @@ export class PlaygroundComponent {
     // pbiwidget.init('dashboard-embed');
     // pbiwidget.setFilters({ resultType: 'Capacity change', year: 2022 });
     pbiwidget.init('dashboard-embed', {
-      resultType: 'Capacity change',
+      // resultType: 'Capacity change',
       year: 2022,
+      reportName:'type-1-report-dashboard_dev',
+      // mainPage:''
+      // sectionNumber: 5
     });
-    pbiwidget.setFilters();
+    // pbiwidget.setFilters();
   }
 }

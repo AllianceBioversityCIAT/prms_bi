@@ -7,6 +7,7 @@ import { map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { IBDGoogleAnalytics } from 'ibdevkit';
 import { VariablesService } from './variables.service';
+import { Title } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root',
@@ -16,12 +17,15 @@ export class BiImplementationService {
     public http: HttpClient,
     private exportTablesSE: ExportTablesService,
     private filtersByDashboardSE: FiltersByDashboardService,
-    private variablesSE: VariablesService
+    private variablesSE: VariablesService,
+    private titleService: Title,
+
   ) {}
 
   apiBaseUrl = environment.apiBaseUrl + 'result-dashboard-bi';
   report: any;
   showExportSpinner = false;
+  currentReportName = '';
 
   getBiReports() {
     return this.http.get<any>(`${this.apiBaseUrl}/bi-reports`).pipe(
@@ -37,16 +41,17 @@ export class BiImplementationService {
     );
   }
 
-  getBiReportWithCredentialsByreportName(report_name: string) {
-    return this.http.get<any>(
-      `${this.apiBaseUrl}/bi-reports/reportName/${report_name}`
+  getBiReportWithCredentialsByreportName(body:any) {
+    return this.http.post<any>(
+      `${this.apiBaseUrl}/bi-reports/reportName`,body
     );
   }
 
   renderReport(
     accessToken: any,
     infoReport: any,
-    reportName: string
+    reportName: string,
+    mainPage:string
   ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       // Embed URL
@@ -79,19 +84,40 @@ export class BiImplementationService {
 
       this.report.off('loaded');
       this.report.on('loaded', () => {
+        console.log("loaded")
         this.report.getFilters().then((filters: any) => {
           this.filtersByDashboardSE.applyFilters(this.report, reportName);
           this.variablesSE.processes[3].works = true;
         });
 
         resolve(this.report);
+
+        this.openMainPage( mainPage);
       });
+
+      this.report.on('pageChanged', (event:any) => {
+        const page = event.detail.newPage;
+        IBDGoogleAnalytics().trackPageView(this.convertNameToTitle(page.displayName));
+      });
+
       this.report.on('error', (err: any) => {
         console.log('Error detected');
         console.log(err);
         reject(err);
       });
       this.exportButton(this.report);
+    });
+  }
+
+  convertNameToTitle = (reportPageName: string) =>{
+   const ttile= `${this.currentReportName} (${reportPageName})`
+   return ttile.replace(/-/g, ' ')?.charAt(0)?.toUpperCase() + ttile?.slice(1);
+  }
+
+  openMainPage( mainPage: string) {
+    this.report.getPages().then((pages:any) => {
+      const page = pages.find((p:any) => p.displayName === mainPage);
+      page && page.setActive();
     });
   }
 
