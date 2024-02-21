@@ -21,7 +21,6 @@ export class BiComponent implements OnInit {
   showFullScreen = false;
   wasInactive = false;
   showMonitorPanel = false;
-
   constructor(
     public biImplementationSE: BiImplementationService,
     private activatedRoute: ActivatedRoute,
@@ -133,8 +132,9 @@ export class BiComponent implements OnInit {
       const { token, report } = reportData;
       this.showFullScreen = report?.hasFullScreen;
 
-      const mainPage = report?.mainPage;
-
+      this.biImplementationSE.mainPage = report?.mainPage;
+      console.log(report?.mainPage)
+      report?.mainPage && (typeof report?.mainPage == 'string') && (this.biImplementationSE.hideIframe = true);
 
       this.validateBAckResponseProcess(reportData);
 
@@ -144,8 +144,8 @@ export class BiComponent implements OnInit {
       await this.biImplementationSE.renderReport(
         token,
         report,
-        this.reportName,
-        mainPage
+        this.reportName
+
       );
       const reportPageName = await this.biImplementationSE.getReportName();
       this.biImplementationSE.currentReportName = report?.name;

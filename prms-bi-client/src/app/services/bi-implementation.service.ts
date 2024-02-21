@@ -7,7 +7,6 @@ import { map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { IBDGoogleAnalytics } from 'ibdevkit';
 import { VariablesService } from './variables.service';
-import { Title } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root',
@@ -18,14 +17,15 @@ export class BiImplementationService {
     private exportTablesSE: ExportTablesService,
     private filtersByDashboardSE: FiltersByDashboardService,
     private variablesSE: VariablesService,
-    private titleService: Title,
-
   ) {}
 
   apiBaseUrl = environment.apiBaseUrl + 'result-dashboard-bi';
   report: any;
   showExportSpinner = false;
   currentReportName = '';
+  mainPage = '';
+  hideIframe = false;
+  showGlobalLoader = true;
 
   getBiReports() {
     return this.http.get<any>(`${this.apiBaseUrl}/bi-reports`).pipe(
@@ -51,7 +51,6 @@ export class BiImplementationService {
     accessToken: any,
     infoReport: any,
     reportName: string,
-    mainPage:string
   ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       // Embed URL
@@ -92,7 +91,9 @@ export class BiImplementationService {
 
         resolve(this.report);
 
-        this.openMainPage( mainPage);
+        this.openMainPage();
+        this.showGlobalLoader = false;
+
       });
 
       this.report.on('pageChanged', (event:any) => {
@@ -114,10 +115,22 @@ export class BiImplementationService {
    return ttile.replace(/-/g, ' ')?.charAt(0)?.toUpperCase() + ttile?.slice(1);
   }
 
-  openMainPage( mainPage: string) {
+  openMainPage() {
+    console.log("openMainPage")
     this.report.getPages().then((pages:any) => {
-      const page = pages.find((p:any) => p.displayName === mainPage);
+      const page = pages.find((p:any) => p.displayName === this.mainPage);
+      this.showGlobalLoader = true;
+
       page && page.setActive();
+      this.report.on('rendered', () => {
+        this.hideIframe = false;
+        this.showGlobalLoader = false;
+      });
+
+      this.report.on('error', () => {
+        this.showGlobalLoader = false;
+      });
+
     });
   }
 

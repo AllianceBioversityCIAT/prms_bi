@@ -31,7 +31,7 @@
 
 <div class="reportDescription" id="reportDescription"></div>
 
-<div #reportContainer id="reportContainer" *ngIf="this.reportName" [style.height]="biHeight()"></div>
+<div #reportContainer id="reportContainer" [ngClass]="{'hideReport': this.biImplementationSE.hideIframe }" *ngIf="this.reportName" [style.height]="biHeight()"></div>
 
 <h1 *ngIf="!this.reportName">No reportName</h1>
 
@@ -83,3 +83,14 @@
     <div class="text">{{process.name}}</div>
   </div>
 </div>
+
+<!-- <div class="report_loader" *ngIf="this.biImplementationSE.showGlobalLoader">
+  <div class="content">
+    <i class="material-icons-round">
+      sync
+    </i>
+    <div class="text">
+      Loading report...
+    </div>
+  </div>
+</div> -->

@@ -77,6 +77,18 @@ export class FiltersByDashboardService {
         valueAttr: 'official_code',
       },
     },
+    {
+      reportName: 'type-1-report-dashboard_dev',
+      filterData: {
+        target: {
+          table: 'result_initiatives',
+          column: 'official_code',
+        },
+        valueAttr: 'official_code',
+      },
+    },
+
+
   ];
 
   constructor(private activatedRoute: ActivatedRoute) {}

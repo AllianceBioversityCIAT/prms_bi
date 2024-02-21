@@ -79,6 +79,9 @@
   margin-top: 0.5rem;
 }
 
+.hideReport{
+  opacity: 0;
+}
 
 .monitor_panel {
   position: fixed;
@@ -171,4 +174,50 @@
   100% {
     transform: scale(.8);
   }
+}
+
+
+.report_loader{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 5px;
+    max-width: 491px;
+    width: 100%;
+    margin: 1rem;
+    i{
+      color: #f1c911;
+      font-size: 3rem;
+      animation: spin 1.5s linear infinite;
+    }
+    .text{
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #525252;
+    }
+  }
+}
+
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); color: #f1c911; }
+  50% { color: #fde681; }
+  100% { transform: rotate(-360deg); color: #f1c911; }
 }
